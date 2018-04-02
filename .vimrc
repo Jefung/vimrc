@@ -1,6 +1,6 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
-" let mapleader = ","
+" let mapleader = "/"
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -88,7 +88,7 @@ colorscheme monokai
 
 " 自动回到上次的位置
 if has("autocmd")
-	au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+    au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
 " autoload _vimrc
@@ -96,84 +96,84 @@ autocmd! bufwritepost $HOME/.vimrc source %
 
 " 设置<F5>运行文件
 function! Run()
-	exec ":!make -C /home/jefung/repos/xml_tree"
-	if &filetype == 'python'
-		exec ":call RunPy()"
-	endif
-	if &filetype == 'cpp'
-		exec ":call RunCPP()"
-	endif
-	if &filetype == 'sh'
-		exec ":call RunSh()"
-	endif
-	if &filetype == 'c'
-		exec ":call RunC()"
-	endif
+    exec ":!make -C /home/jefung/repos/xml_tree"
+    if &filetype == 'python'
+        exec ":call RunPy()"
+    endif
+    if &filetype == 'cpp'
+        exec ":call RunCPP()"
+    endif
+    if &filetype == 'sh'
+        exec ":call RunSh()"
+    endif
+    if &filetype == 'c'
+        exec ":call RunC()"
+    endif
 endfunc
 
 function! RunSh()
-	exec "w"
-	exec "!chmod a+x %"
-	exec "!./%"
+    exec "w"
+    exec "!chmod a+x %"
+    exec "!./%"
 endfunc
 function! RunPy()
-	exec "w"
-	" exec "!python3 %"
-	exec "!python %"
+    exec "w"
+    " exec "!python3 %"
+    exec "!python %"
 endfunc
 
 function! RunCPP()
-	exec "w"
-	" exec "!clang++ -o /tmp/a.out main.cpp -lstdc++ && /tmp/a.out"
-	" return
-	let compilecmd="!clang++ ".expand("%")
+    exec "w"
+    " exec "!clang++ -o /tmp/a.out main.cpp -lstdc++ && /tmp/a.out"
+    " return
+    let compilecmd="!clang++ ".expand("%")
 
-	let compileflag="-o /tmp/a.out -lstdc++ -lgtest -lpthread"
-	" let compileflag="-o /tmp/a.out -lstdc++ -lunp"
-	if search("unp\.h") != 0
-		let compileflag .= " -lunp -lgtest"
-	endif
-	" if search("glut\.h") != 0
-	"     let compileflag .= " -lglut -lGLU -lGL "
-	" endif
-	" if search("cv\.h") != 0
-	"     let compileflag .= " -lcv -lhighgui -lcvaux "
-	" endif
-	" if search("omp\.h") != 0
-	"     let compileflag .= " -fopenmp "
-	" endif
-	" if search("math\.h") != 0
-	"     let compileflag .= " -lm "
-	" endif
-	" if search("iostream") != 0
-	"     let compileflag .= " -lstdc++ "
-	" endif
-	" echo compileflag
-	" exec compilecmd compileflag
-	exec compilecmd compileflag."&& /tmp/a.out"
+    let compileflag="-o /tmp/a.out -lstdc++ -lgtest -lpthread"
+    " let compileflag="-o /tmp/a.out -lstdc++ -lunp"
+    if search("unp\.h") != 0
+        let compileflag .= " -lunp -lgtest"
+    endif
+    " if search("glut\.h") != 0
+    "     let compileflag .= " -lglut -lGLU -lGL "
+    " endif
+    " if search("cv\.h") != 0
+    "     let compileflag .= " -lcv -lhighgui -lcvaux "
+    " endif
+    " if search("omp\.h") != 0
+    "     let compileflag .= " -fopenmp "
+    " endif
+    " if search("math\.h") != 0
+    "     let compileflag .= " -lm "
+    " endif
+    " if search("iostream") != 0
+    "     let compileflag .= " -lstdc++ "
+    " endif
+    " echo compileflag
+    " exec compilecmd compileflag
+    exec compilecmd compileflag."&& /tmp/a.out"
 endfunc
 
 function! RunC()
-	exec "w"
-	let compilecmd="!clang ".expand("%")
-	let compileflag="-o " .expand("%:r"). " -lstdc++"
-	if search("unp\.h") != 0
-		let compileflag .= " -lunp "
-	endif
-	exec compilecmd compileflag."&& ./". expand("%:r")
+    exec "w"
+    let compilecmd="!clang ".expand("%")
+    let compileflag="-o " .expand("%:r"). " -lstdc++"
+    if search("unp\.h") != 0
+        let compileflag .= " -lunp "
+    endif
+    exec compilecmd compileflag."&& ./". expand("%:r")
 endfunc
 
 function! Debug()
-	if &filetype == 'cpp'
-		exec ":call DebugCpp()"
-	endif
+    if &filetype == 'cpp'
+        exec ":call DebugCpp()"
+    endif
 endfunc
 
 function! DebugCpp()
-	exec "w"
-	" exec "!g++ -std=c++11 -O0 -g main.cpp -o /tmp/a.out && gdb -tui /tmp/a.out"
-	exec "!clang++ -lstdc++ -O0 -g main.cpp -o /tmp/a.out &&  gdb /tmp/a.out"
-	" exec "!clang -lstdc++ -O0 -g main.cpp -o /tmp/a.out &&  sudo gdb  /tmp/a.out"
+    exec "w"
+    " exec "!g++ -std=c++11 -O0 -g main.cpp -o /tmp/a.out && gdb -tui /tmp/a.out"
+    exec "!clang++ -lstdc++ -O0 -g main.cpp -o /tmp/a.out &&  gdb /tmp/a.out"
+    " exec "!clang -lstdc++ -O0 -g main.cpp -o /tmp/a.out &&  sudo gdb  /tmp/a.out"
 endfunc
 
 map <F6> :call Debug()<CR>
@@ -182,18 +182,18 @@ map <F5> :call Run()<CR>
 imap <F5> <Esc>:call Run() <CR>
 " 设置sh的文件头
 function!  SetTitleForSh()
-	if &filetype == 'sh'
-		call setline(1, "\############################################")
-		call append(line("."), "\# File Name: ".expand("%"))
-		call append(line(".")+1, "\# Program: ")
-		call append(line(".")+2, "\# Usage :")
-		call append(line(".")+3, "\# Author :".$author_name)
-		call append(line(".")+4, "\# email :".$author_email)
-		call append(line(".")+5, "\# create time :".strftime("%c"))
-		call append(line(".")+6, "\#======================================")
-		call append(line(".")+7, "\#!/bin/bash")
-		call append(line(".")+8, "")
-	endif
+    if &filetype == 'sh'
+        call setline(1, "\############################################")
+        call append(line("."), "\# File Name: ".expand("%"))
+        call append(line(".")+1, "\# Program: ")
+        call append(line(".")+2, "\# Usage :")
+        call append(line(".")+3, "\# Author :".$author_name)
+        call append(line(".")+4, "\# email :".$author_email)
+        call append(line(".")+5, "\# create time :".strftime("%c"))
+        call append(line(".")+6, "\#======================================")
+        call append(line(".")+7, "\#!/bin/bash")
+        call append(line(".")+8, "")
+    endif
 
 endfunc
 autocmd BufNewFile *.sh, exec ":call SetTitleForSh()"
@@ -202,50 +202,50 @@ let $author_email = "865424525jefung@gmail.com"
 
 " 设置java的文件头
 function! PreBuildInJava()
-	call setline(1,"public class ".expand("%:r")."{")
-	call setline(line(".")+1,"")
-	call setline(line(".")+2,"	public static void main(String args[]){")
-	call setline(line(".")+3,"")
-	call setline(line(".")+4,"	}")
-	call setline(line(".")+5,"")
-	call setline(line(".")+6,"}")
+    call setline(1,"public class ".expand("%:r")."{")
+    call setline(line(".")+1,"")
+    call setline(line(".")+2,"  public static void main(String args[]){")
+    call setline(line(".")+3,"")
+    call setline(line(".")+4,"  }")
+    call setline(line(".")+5,"")
+    call setline(line(".")+6,"}")
 endfunc
 autocmd BufNewFile *.java exec ":call PreBuildInJava()"
 
 " 设置python的文件头
 function! SetTitleForPy()
-	call setline(1,"#!/usr/bin/env python")
-	call setline(line(".")+1,"# -*- coding: utf-8 -*- ")
-	call setline(line(".")+2,"")
+    call setline(1,"#!/usr/bin/env python")
+    call setline(line(".")+1,"# -*- coding: utf-8 -*- ")
+    call setline(line(".")+2,"")
 endfunc
 autocmd BufNewFile *.py exec ":call SetTitleForPy()"
 " 设置main.cpp 的文件头
 function! SetTitleForMainCpp()
-	call setline(1,"/*")
-	call setline(line(".")+1,"* auth        : Jefung")
-	call setline(line(".")+2,"* version     : v1.0")
-	call setline(line(".")+3,"* description : ")
-	call setline(line(".")+4,"*		")
-	call setline(line(".")+5,"* analyse     : ")
-	call setline(line(".")+6,"*		")
-	call setline(line(".")+7,"*/")
-	call setline(line(".")+8,"")
-	call setline(line(".")+9,"#include <iostream>")
-	call setline(line(".")+10,"using namespace std;")
-	call setline(line(".")+11,"")
-	call setline(line(".")+12,"int main(int argc, char *argv[] ){")
-	call setline(line(".")+13,"		")
-	call setline(line(".")+14,"}")
+    call setline(1,"/*")
+    call setline(line(".")+1,"* auth        : Jefung")
+    call setline(line(".")+2,"* version     : v1.0")
+    call setline(line(".")+3,"* description : ")
+    call setline(line(".")+4,"*     ")
+    call setline(line(".")+5,"* analyse     : ")
+    call setline(line(".")+6,"*     ")
+    call setline(line(".")+7,"*/")
+    call setline(line(".")+8,"")
+    call setline(line(".")+9,"#include <iostream>")
+    call setline(line(".")+10,"using namespace std;")
+    call setline(line(".")+11,"")
+    call setline(line(".")+12,"int main(int argc, char *argv[] ){")
+    call setline(line(".")+13,"     ")
+    call setline(line(".")+14,"}")
 endfunc
 autocmd BufNewFile main.cpp exec ":call SetTitleForMainCpp()"
 
 " 设置.h头文件的文件头
 function! SetTitleForHeadCpp()
-	call setline(1,"#ifndef ".toupper(expand("%:r")))
-	call setline(line(".")+1,"#define ".toupper(expand("%:r")))
-	call setline(line(".")+2,"")
-	call setline(line(".")+3,"")
-	call setline(line(".")+4,"#endif")
+    call setline(1,"#ifndef ".toupper(expand("%:r")))
+    call setline(line(".")+1,"#define ".toupper(expand("%:r")))
+    call setline(line(".")+2,"")
+    call setline(line(".")+3,"")
+    call setline(line(".")+4,"#endif")
 endfunc
 autocmd BufNewFile *.hpp exec ":call SetTitleForHeadCpp()"
 
@@ -254,24 +254,24 @@ autocmd BufNewFile *.hpp exec ":call SetTitleForHeadCpp()"
 
 " 根据不同文件类型加载不同配置
 au BufNewFile,BufRead *.py
-			\ set tabstop=4 |
-			\ set softtabstop=4 |
-			\ set shiftwidth=4 |
-			\ set textwidth=79 |
-			\ set expandtab |
-			\ set autoindent |
-			\ set fileformat=unix |
+            \ set tabstop=4 |
+            \ set softtabstop=4 |
+            \ set shiftwidth=4 |
+            \ set textwidth=79 |
+            \ set expandtab |
+            \ set autoindent |
+            \ set fileformat=unix |
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""   Shortcut  """""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"	Leader + f : CtrlP
-"	Leader + q : quit
-"	Leader + w : save
-"	Leader + o : open
-"	Leader + r : refresh
-"	Leader + j : ycm jump Define
+"   Leader + f : CtrlP
+"   Leader + q : quit
+"   Leader + w : save
+"   Leader + o : open
+"   Leader + r : refresh
+"   Leader + j : ycm jump Define
 "   Leader + e : syntastic
-let mapleader = ","
+let mapleader = ";"
 
 " help  :h key-notation
 nmap <Leader>q :b# <BAR> bd# <CR>
@@ -280,19 +280,6 @@ map <F10> :TlistToggle <CR>
 nmap <Tab> : bn <CR>
 nmap <Leader><Tab> : bp<CR>
 
-" nmap <Tab> : tabn<CR>
-" nmap <Leader>o :tabnew
-" nmap <leader>h :bp <CR>
-" nmap <leader>l :bn <CR>
-
-
-" syntastic
-nmap <Leader>en :lnext<CR>
-nmap <Leader>ep :lprevious<CR>
-
-
-
-" ctrlp   [   !!Leader + f !! ];
 "find file
 " nnoremap <Leader>ff :CtrlP
 nnoremap <Leader>fb :CtrlPBuffer<CR>
@@ -301,11 +288,6 @@ nnoremap <Leader>fr :CtrlPMRU<CR>
 nnoremap <Leader>fu :CtrlPFunky<Cr>
 " narrow the list down with a word under cursor
 nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
-
-" most recently used
-
-
-
 
 " quickly comment
 nmap <leader>/ <leader>c<Space>
@@ -320,14 +302,18 @@ vnoremap <C-\> :call PhpDocRange()<CR>
 
 " 取消方向键的移动
 " abandon move key
-map <Left>	<Nop>
-map <Right>	<Nop>
-map <Up>	<Nop>
-map <Down>	<Nop>
+map <Left>  <Nop>
+map <Right> <Nop>
+map <Up>    <Nop>
+map <Down>  <Nop>
 
-" 全局复制
-vmap <Leader>y "+y
-nnoremap <Leader>p "+p
+" 自定义大写H（行首）L（行末）
+" custom upper H -> top of line, L -> end of line
+" custom upper K -> top of text, J -> end of text
+map H ^
+map L $
+" map K gg
+" map J G
 
 " 窗口移动
 " move window
@@ -335,6 +321,12 @@ map <C-j> <C-W>j
 map <C-h> <C-W>h
 map <C-k> <C-W>k
 map <C-l> <C-W>l
+
+" 全局复制
+" systematic clipboard
+vmap <Leader>y "+y
+nnoremap <Leader>p "+p
+
 
 " markdown-preview.vim 快捷
 " nmap <Plug>mdp <Plug>MarkdownPreview<CR>
@@ -386,36 +378,6 @@ Plugin 'Valloric/YouCompleteMe'
 "      <语法检测>       #
 "########################
 Plugin 'vim-syntastic/syntastic'
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
-
-
-"修改Locaton List窗口高度
-let g:syntastic_loc_list_height = 5
-"打开文件时自动进行检查
-let g:syntastic_check_on_open = 0
-"自动跳转到发现的第一个错误或警告处
-let g:syntastic_auto_jump = 1
-
-let g:syntastic_error_symbol='✗'
-let g:syntastic_warning_symbol='►'
-let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
-
-let g:syntastic_cpp_checkers = ['clang_check']
-" let g:syntastic_cpp_clang_check_post_args = "-I/home/jefung/repos/xml_tree/include"
-" let g:syntastic_c_clang_check_args = "-I/home/jefung/repos/xml_tree/include"
-" let g:syntastic_cpp_clang_check_args = "-I/home/jefung/repos/xml_tree/include"
-let g:syntastic_clang_check_config_file = "~/.syntastic_clang_check_config_file"
-
-" let g:syntastic_cpp_include_dirs = ["/home/jefung/repos/xml_tree/include/interface"]
-" let g:syntastic_cpp__clang_check_args = "-p=/home/jefung/usr/llvmbuild"
-" 关闭buffer时连同报错框一起关闭
-cabbrev <silent> bd <C-r>=(getcmdtype()==#':' && getcmdpos()==1 ? 'lclose\|bdelete' : 'bd')<CR>
 "########################
 "      <\语法检测>      #
 "########################
@@ -775,23 +737,35 @@ let vimrcs = $HOME."/.vimrcs"
 
 " auto load *.vim in the dir argument you give
 function! LoadVimFile(dir)
-	if finddir(a:dir) != ""
-		let vim_files = split(globpath(a:dir,"*.vim"),'\n')
-		for f in vim_files
-			exec "source " f
-		endfor
+    if finddir(a:dir) != ""
+        let vim_files = split(globpath(a:dir,"*.vim"),'\n')
+        for f in vim_files
+            exec "source " f
+        endfor
 
-		let dirs = split(globpath(a:dir,"*"),'\n')
-		for subdir in dirs
-			if finddir(subdir) != ""
-				exec "call LoadVimFile(subdir)"	
-			endif
-		endfor
-	else
-		echo a:dir." is not exists"
+        let dirs = split(globpath(a:dir,"*"),'\n')
+        for subdir in dirs
+            if finddir(subdir) != ""
+                exec "call LoadVimFile(subdir)"
+            endif
+        endfor
+    else
+        echo a:dir." is not exists"
 
-	endif
+    endif
 endfunc
 exec "call LoadVimFile(vimrcs)"
 set textwidth=140
 " Plugin 'Xuyuanp/nerdtree-git-plugin'
+"
+Plugin 'lilydjwg/fcitx.vim'
+Plugin 'octol/vim-cpp-enhanced-highlight'
+let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+" let g:cpp_no_function_highlight = 1
+Plugin 'nathanaelkane/vim-indent-guides'
+let g:indent_guides_start_level = 2
+let g:indent_guides_guide_size = 1
+" let g:indent_guides_space_guides = 0
+Plugin 'derekwyatt/vim-fswitch'
