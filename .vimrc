@@ -767,5 +767,7 @@ let g:cpp_class_decl_highlight = 1
 Plugin 'nathanaelkane/vim-indent-guides'
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
-" let g:indent_guides_space_guides = 0
-Plugin 'derekwyatt/vim-fswitch'
+
+" 对markdown格式的文件开启英文单词拼写检查
+" open English word spell check for markdown
+autocmd FileType markdown,mkd setlocal spell 
