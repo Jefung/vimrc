@@ -3,7 +3,6 @@ map <F9> :NERDTreeToggle<CR>
 
 
 """""""""""""""""""""""" setting """""""""""""""""""""""""""
-Plugin 'scrooloose/nerdtree'
 let NERDTreeShowHidden=1
 let NERDTreeWinSize=20
 
