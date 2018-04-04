@@ -245,26 +245,40 @@ autocmd! bufwritepost $HOME/.vimrc source %
 let $author_name = "Jefung"
 let $author_email = "865424525jefung@gmail.com"
 
-" Todo: fix nerdtree plugin bug: can't set user title when using nerdtree method to new file
+" question: fix nerdtree plugin bug: can't set user title when using nerdtree method to new file
+" solution: add BufEnter event to file, and adjust if it's empty or not, if empty, add title to it
 " 设置sh的文件头
 function!  SetTitleForSh()
+	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
+	if l:is_empty == 0
+		return
+	endif
     if &filetype == 'sh'
         call setline(1, "\############################################")
         call append(line("."), "\# File Name: ".expand("%"))
         call append(line(".")+1, "\# Program: ")
-        call append(line(".")+2, "\# Usage :")
-        call append(line(".")+3, "\# Author :".$author_name)
-        call append(line(".")+4, "\# email :".$author_email)
-        call append(line(".")+5, "\# create time :".strftime("%c"))
-        call append(line(".")+6, "\#======================================")
-        call append(line(".")+7, "\#!/bin/bash")
-        call append(line(".")+8, "")
+        call append(line(".")+2, "\# 	 ")
+        call append(line(".")+3, "\# Usage :")
+        call append(line(".")+4, "\#	 ")
+        call append(line(".")+5, "\# Author :".$author_name)
+        call append(line(".")+6, "\# email :".$author_email)
+        call append(line(".")+7, "\# create time :".strftime("%Y-%m-%d %H:%M"))
+        call append(line(".")+8, "\#======================================")
+        call append(line(".")+9, "\#!/bin/bash")
+        call append(line(".")+10, "")
     endif
+	exec ":w"
 endfunc
-autocmd BufNewFile *.sh, exec ":call SetTitleForSh()"
+autocmd BufNew,BufEnter *.sh, exec ":call SetTitleForSh()"
 
+	
 " 设置java的文件头
 function! PreBuildInJava()
+	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
+	if l:is_empty == 0
+		return
+	endif
+
     call setline(1,"public class ".expand("%:r")."{")
     call setline(line(".")+1,"")
     call setline(line(".")+2,"  public static void main(String args[]){")
@@ -272,19 +286,29 @@ function! PreBuildInJava()
     call setline(line(".")+4,"  }")
     call setline(line(".")+5,"")
     call setline(line(".")+6,"}")
+	exec ":w"
 endfunc
-autocmd BufNewFile *.java exec ":call PreBuildInJava()"
+autocmd BufNewFile,BufEnter *.java exec ":call PreBuildInJava()"
 
 " 设置python的文件头
 function! SetTitleForPy()
+	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
+	if l:is_empty == 0
+		return
+	endif
     call setline(1,"#!/usr/bin/env python")
     call setline(line(".")+1,"# -*- coding: utf-8 -*- ")
     call setline(line(".")+2,"")
+	exec ":w"
 endfunc
-autocmd BufNewFile *.py exec ":call SetTitleForPy()"
+autocmd BufNewFile,BufEnter *.py exec ":call SetTitleForPy()"
 
 " 设置main.cpp 的文件头
 function! SetTitleForMainCpp()
+	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
+	if l:is_empty == 0
+		return
+	endif
     call setline(1,"/*")
     call setline(line(".")+1,"* auth        : Jefung")
     call setline(line(".")+2,"* version     : v1.0")
@@ -300,18 +324,24 @@ function! SetTitleForMainCpp()
     call setline(line(".")+12,"int main(int argc, char *argv[] ){")
     call setline(line(".")+13,"     ")
     call setline(line(".")+14,"}")
+	exec ":w"
 endfunc
-autocmd BufNewFile main.cpp exec ":call SetTitleForMainCpp()"
+autocmd BufNewFile,BufEnter main.cpp exec ":call SetTitleForMainCpp()"
 
 " 设置.h头文件的文件头
-function! SetTitleForHeadCpp()
+function! SetTitleForHpp()
+	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
+	if l:is_empty == 0
+		return
+	endif
     call setline(1,"#ifndef ".toupper(expand("%:r")))
     call setline(line(".")+1,"#define ".toupper(expand("%:r")))
     call setline(line(".")+2,"")
     call setline(line(".")+3,"")
     call setline(line(".")+4,"#endif")
+	exec ":w"
 endfunc
-autocmd BufNewFile *.hpp exec ":call SetTitleForHeadCpp()"
+autocmd BufNewFile,BufEnter *.hpp,*.h exec ":call SetTitleForHpp()"
 
 " 增加自定义修改文件名: rename newfilename
 :command! -nargs=1 Rename let tpname = expand('%:t') | saveas <args> | edit <args> | call delete(expand(tpname))
