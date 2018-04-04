@@ -29,12 +29,15 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " 当vim中没有其他文件，值剩下nerdtree的时候，自动关闭窗口
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-
 " NERDTress File highlighting
 function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
 	 exec 'autocmd FileType nerdtree highlight ' . a:extension .' ctermbg='.  a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
 	  exec 'autocmd FileType nerdtree syn match ' . a:extension .' #^\s\+.*'.  a:extension .'$#'
 endfunc
+
+" auto focus on file buffer but nerdtree buffer when enter buffer
+" autocmd bufenter * if (winnr(“$”) == 2 && exists(“b:NERDTreeType”) && b:NERDTreeType == “primary”) | q | endif
+autocmd VimEnter * if (winnr("$") == 2 && exists("b:NERDTree")) | wincmd w | endif
 
 call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
 call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
