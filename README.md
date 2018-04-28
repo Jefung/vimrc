@@ -38,3 +38,4 @@ vim安装
 * .vimrc: 用户vim配置文件
 * .ycm_extra_conf.py: [YouComplete自动补全插件](https://github.com/Valloric/YouCompleteMe/blob/master/README.md)安装后的配置文件
 * install.sh:　快速安装脚本，仅仅单纯的建立软链接
+* .clang-format: 用于clang-format程序格式化cpp/c时的设置,比如函数括号在函数名后面
