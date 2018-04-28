@@ -1,6 +1,5 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
-" let mapleader = "/"
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -29,6 +28,7 @@ filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""" general setting """""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let mapleader=";"
 " 设置自动读取
 set autoread
 
@@ -115,7 +115,7 @@ colorscheme monokai
 
 " 自动回到上次的位置
 if has("autocmd")
-    au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+	au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
 " 自动跳转文件所在目录
@@ -123,228 +123,6 @@ set autochdir
 
 " auto reload vimrc when editing it
 autocmd! bufwritepost .vimrc source ~/.vimrc
-
-let vimrcs = $HOME."/.vimrcs"
-
-" auto load *.vim in the dir argument you give
-function! LoadVimFile(dir)
-    if finddir(a:dir) != ""
-        let vim_files = split(globpath(a:dir,"*.vim"),'\n')
-        for f in vim_files
-            exec "source " f
-        endfor
-
-        let dirs = split(globpath(a:dir,"*"),'\n')
-        for subdir in dirs
-            if finddir(subdir) != ""
-                exec "call LoadVimFile(subdir)"
-            endif
-        endfor
-    else
-        echo a:dir." is not exists"
-
-    endif
-endfunc
-exec "call LoadVimFile(vimrcs)"
-set textwidth=140
-
-" 对markdown格式的文件开启英文单词拼写检查
-" open English word spell check for markdown
-autocmd FileType markdown,mkd setlocal spell spelllang=cjk,en_us
-" 当修改.vimrc，自动加载
-autocmd! bufwritepost $HOME/.vimrc source %
-
-" 设置<f5>运行文件
-" function! run()
-"     exec ":!make -c /home/jefung/repos/xml_tree"
-"     if &filetype == 'python'
-"         exec ":call runpy()"
-"     endif
-"     if &filetype == 'cpp'
-"         exec ":call runcpp()"
-"     endif
-"     if &filetype == 'sh'
-"         exec ":call runsh()"
-"     endif
-"     if &filetype == 'c'
-"         exec ":call runc()"
-"     endif
-" endfunc
-"
-" function! runsh()
-"     exec "w"
-"     exec "!chmod a+x %"
-"     exec "!./%"
-" endfunc
-" function! runpy()
-"     exec "w"
-"     " exec "!python3 %"
-"     exec "!python %"
-" endfunc
-"
-" function! runcpp()
-"     exec "w"
-"     " exec "!clang++ -o /tmp/a.out main.cpp -lstdc++ && /tmp/a.out"
-"     " return
-"     let compilecmd="!clang++ ".expand("%")
-"
-"     let compileflag="-o /tmp/a.out -lstdc++ -lgtest -lpthread"
-"     " let compileflag="-o /tmp/a.out -lstdc++ -lunp"
-"     if search("unp\.h") != 0
-"         let compileflag .= " -lunp -lgtest"
-"     endif
-"     " if search("glut\.h") != 0
-"     "     let compileflag .= " -lglut -lglu -lgl "
-"     " endif
-"     " if search("cv\.h") != 0
-"     "     let compileflag .= " -lcv -lhighgui -lcvaux "
-"     " endif
-"     " if search("omp\.h") != 0
-"     "     let compileflag .= " -fopenmp "
-"     " endif
-"     " if search("math\.h") != 0
-"     "     let compileflag .= " -lm "
-"     " endif
-"     " if search("iostream") != 0
-"     "     let compileflag .= " -lstdc++ "
-"     " endif
-"     " echo compileflag
-"     " exec compilecmd compileflag
-"     exec compilecmd compileflag."&& /tmp/a.out"
-" endfunc
-"
-" function! runc()
-"     exec "w"
-"     let compilecmd="!clang ".expand("%")
-"     let compileflag="-o " .expand("%:r"). " -lstdc++"
-"     if search("unp\.h") != 0
-"         let compileflag .= " -lunp "
-"     endif
-"     exec compilecmd compileflag."&& ./". expand("%:r")
-" endfunc
-"
-" function! debug()
-"     if &filetype == 'cpp'
-"         exec ":call debugcpp()"
-"     endif
-" endfunc
-"
-" function! debugcpp()
-"     exec "w"
-"     " exec "!g++ -std=c++11 -o0 -g main.cpp -o /tmp/a.out && gdb -tui /tmp/a.out"
-"     exec "!clang++ -lstdc++ -o0 -g main.cpp -o /tmp/a.out &&  gdb /tmp/a.out"
-"     " exec "!clang -lstdc++ -o0 -g main.cpp -o /tmp/a.out &&  sudo gdb  /tmp/a.out"
-" endfunc
-"
-" map <f6> :call debug()<cr>
-" imap <f5> <esc>:call debug() <cr>
-" map <f5> :call run()<cr>
-" imap <f5> <esc>:call run() <cr>
-
-" 设置变量,供下文使用
-let $author_name = "Jefung"
-let $author_email = "865424525jefung@gmail.com"
-
-" question: fix nerdtree plugin bug: can't set user title when using nerdtree method to new file
-" solution: add BufEnter event to file, and adjust if it's empty or not, if empty, add title to it
-" 设置sh的文件头
-function!  SetTitleForSh()
-	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
-	if l:is_empty == 0
-		return
-	endif
-    if &filetype == 'sh'
-        call setline(1, "\############################################")
-        call append(line("."), "\# File Name: ".expand("%"))
-        call append(line(".")+1, "\# Program: ")
-        call append(line(".")+2, "\# 	 ")
-        call append(line(".")+3, "\# Usage :")
-        call append(line(".")+4, "\#	 ")
-        call append(line(".")+5, "\# Author :".$author_name)
-        call append(line(".")+6, "\# email :".$author_email)
-        call append(line(".")+7, "\# create time :".strftime("%Y-%m-%d %H:%M"))
-        call append(line(".")+8, "\#======================================")
-        call append(line(".")+9, "\#!/bin/bash")
-        call append(line(".")+10, "")
-    endif
-	exec ":w"
-endfunc
-autocmd BufNew,BufEnter *.sh, exec ":call SetTitleForSh()"
-
-	
-" 设置java的文件头
-function! PreBuildInJava()
-	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
-	if l:is_empty == 0
-		return
-	endif
-
-    call setline(1,"public class ".expand("%:r")."{")
-    call setline(line(".")+1,"")
-    call setline(line(".")+2,"  public static void main(String args[]){")
-    call setline(line(".")+3,"")
-    call setline(line(".")+4,"  }")
-    call setline(line(".")+5,"")
-    call setline(line(".")+6,"}")
-	exec ":w"
-endfunc
-autocmd BufNewFile,BufEnter *.java exec ":call PreBuildInJava()"
-
-" 设置python的文件头
-function! SetTitleForPy()
-	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
-	if l:is_empty == 0
-		return
-	endif
-    call setline(1,"#!/usr/bin/env python")
-    call setline(line(".")+1,"# -*- coding: utf-8 -*- ")
-    call setline(line(".")+2,"")
-	exec ":w"
-endfunc
-autocmd BufNewFile,BufEnter *.py exec ":call SetTitleForPy()"
-
-" 设置main.cpp 的文件头
-function! SetTitleForMainCpp()
-	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
-	if l:is_empty == 0
-		return
-	endif
-    call setline(1,"/*")
-    call setline(line(".")+1,"* auth        : Jefung")
-    call setline(line(".")+2,"* version     : v1.0")
-    call setline(line(".")+3,"* description : ")
-    call setline(line(".")+4,"*     ")
-    call setline(line(".")+5,"* analyse     : ")
-    call setline(line(".")+6,"*     ")
-    call setline(line(".")+7,"*/")
-    call setline(line(".")+8,"")
-    call setline(line(".")+9,"#include <iostream>")
-    call setline(line(".")+10,"using namespace std;")
-    call setline(line(".")+11,"")
-    call setline(line(".")+12,"int main(int argc, char *argv[] ){")
-    call setline(line(".")+13,"     ")
-    call setline(line(".")+14,"}")
-	exec ":w"
-endfunc
-autocmd BufNewFile,BufEnter main.cpp exec ":call SetTitleForMainCpp()"
-
-" 设置.h头文件的文件头
-function! SetTitleForHpp()
-	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
-	if l:is_empty == 0
-		return
-	endif
-    call setline(1,"#ifndef ".toupper(expand("%:r")))
-    call setline(line(".")+1,"#define ".toupper(expand("%:r")))
-    call setline(line(".")+2,"")
-    call setline(line(".")+3,"")
-    call setline(line(".")+4,"#endif")
-	exec ":w"
-endfunc
-autocmd BufNewFile,BufEnter *.hpp,*.h exec ":call SetTitleForHpp()"
-
-" 增加自定义修改文件名: rename newfilename
-:command! -nargs=1 Rename let tpname = expand('%:t') | saveas <args> | edit <args> | call delete(expand(tpname))
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""   Shortcut  """""""""""""""""""""""""""""""""""""""""""""""
@@ -360,17 +138,11 @@ let mapleader = ";"
 " help  :h key-notation
 nmap <Leader>q :b# <BAR> bd# <CR>
 nmap <Leader>w :w<CR>
-nmap <Tab> : bn <CR>
-nmap <Leader><Tab> : bp<CR>
+nmap <Tab> :call ChangeBuf('n') <CR>
+nmap <Leader><Tab> :call ChangeBuf('p') <CR>
+
 
 " find file
-" nnoremap <Leader>ff :CtrlP
-nnoremap <Leader>fb :CtrlPBuffer<CR>
-nnoremap <Leader>ff :CtrlPMixed<CR>
-nnoremap <Leader>fr :CtrlPMRU<CR>
-nnoremap <Leader>fu :CtrlPFunky<Cr>
-" narrow the list down with a word under cursor
-nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 
 " 快速注释
 " quickly comment
@@ -411,6 +183,7 @@ map <C-l> <C-W>l
 " systematic clipboard
 vmap <Leader>y "+y
 nnoremap <Leader>p "+p
+nnoremap <Leader>P o<ESC>"+p
 
 
 " markdown-preview.vim 快捷
@@ -451,7 +224,7 @@ Plugin 'Valloric/YouCompleteMe'
 "########################
 "      <语法检测>       #
 "########################
-Plugin 'vim-syntastic/syntastic'
+" Plugin 'vim-syntastic/syntastic'
 
 "########################
 "    <自动切换输入法>   #
@@ -463,6 +236,7 @@ Plugin 'lilydjwg/fcitx.vim'
 "       <文件操作>      #
 "########################
 Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
 
 
 
@@ -482,7 +256,6 @@ Plugin 'plasticboy/vim-markdown'
 "<底部导航条和buffer显示> #
 "##########################
 Plugin 'vim-airline/vim-airline'
-" Plugin 'vim-airline/vim-airline-themes'
 
 "       <片段补全>      #
 "########################
@@ -526,3 +299,233 @@ Plugin 'octol/vim-cpp-enhanced-highlight'
 "    <上下括号对齐线>   #
 "########################
 Plugin 'nathanaelkane/vim-indent-guides'
+
+"########################
+"     <vim表格对齐>     #
+"########################
+Plugin 'dhruvasagar/vim-table-mode'
+
+"########################
+"  <vim异步执行shell>   #
+"########################
+Plugin 'skywind3000/vimmake'
+
+"########################
+"  <异步执行shell>   #
+"########################
+Plugin 'kien/ctrlp.vim'
+" ctrlp使用ag.vim提高查找速度,ag.vim使用外部 ag/"the_silver_searcher"
+Plugin 'rking/ag.vim'
+
+"########################
+"    <异步代码检查>     #
+"########################
+Plugin 'w0rp/ale'
+
+
+let vimrcs = $HOME."/.vimrcs"
+
+" auto load *.vim in the dir argument you give
+function! LoadVimFile(dir)
+	if finddir(a:dir) != ""
+		let vim_files = split(globpath(a:dir,"*.vim"),'\n')
+		for f in vim_files
+			exec "source " f
+		endfor
+
+		let dirs = split(globpath(a:dir,"*"),'\n')
+		for subdir in dirs
+			if finddir(subdir) != ""
+				exec "call LoadVimFile(subdir)"
+			endif
+		endfor
+	else
+		echo a:dir." is not exists"
+
+	endif
+endfunc
+exec "call LoadVimFile(vimrcs)"
+set textwidth=140
+
+" 对markdown格式的文件开启英文单词拼写检查
+" open English word spell check for markdown
+autocmd FileType markdown,mkd setlocal spell spelllang=cjk,en_us
+" 当修改.vimrc，自动加载
+autocmd! bufwritepost $HOME/.vimrc source %
+
+" 设置变量,供下文使用
+let $author_name = "Jefung"
+let $author_email = "865424525jefung@gmail.com"
+
+" question: fix nerdtree plugin bug: can't set user title when using nerdtree method to new file
+" solution: add BufEnter event to file, and adjust if it's empty or not, if empty, add title to it
+" 设置sh的文件头
+function!  SetTitleForSh()
+	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
+	if l:is_empty == 0
+		return
+	endif
+	if &filetype == 'sh'
+		call setline(1, "\############################################")
+		call append(line("."), "\# File Name: ".expand("%"))
+		call append(line(".")+1, "\# Program: ")
+		call append(line(".")+2, "\#	 ")
+		call append(line(".")+3, "\# Usage :")
+		call append(line(".")+4, "\#	 ")
+		call append(line(".")+5, "\# Author :".$author_name)
+		call append(line(".")+6, "\# email :".$author_email)
+		call append(line(".")+7, "\# create time :".strftime("%Y-%m-%d %H:%M"))
+		call append(line(".")+8, "\#======================================")
+		call append(line(".")+9, "\#!/bin/bash")
+		call append(line(".")+10, "")
+	endif
+	exec ":w"
+endfunc
+autocmd BufNew,BufEnter *.sh, exec ":call SetTitleForSh()"
+
+
+" 设置java的文件头
+function! PreBuildInJava()
+	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
+	if l:is_empty == 0
+		return
+	endif
+
+	call setline(1,"public class ".expand("%:r")."{")
+	call setline(line(".")+1,"")
+	call setline(line(".")+2,"  public static void main(String args[]){")
+	call setline(line(".")+3,"")
+	call setline(line(".")+4,"  }")
+	call setline(line(".")+5,"")
+	call setline(line(".")+6,"}")
+	exec ":w"
+endfunc
+autocmd BufNewFile,BufEnter *.java exec ":call PreBuildInJava()"
+
+" 设置python的文件头
+function! SetTitleForPy()
+	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
+	if l:is_empty == 0
+		return
+	endif
+	call setline(1,"#!/usr/bin/env python")
+	call setline(line(".")+1,"# -*- coding: utf-8 -*- ")
+	call setline(line(".")+2,"")
+	exec ":w"
+endfunc
+autocmd BufNewFile,BufEnter *.py exec ":call SetTitleForPy()"
+
+" 设置main.cpp 的文件头
+function! SetTitleForMainCpp()
+	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
+	if l:is_empty == 0
+		return
+	endif
+	call setline(1,"/*")
+	call setline(line(".")+1,"* auth        : Jefung")
+	call setline(line(".")+2,"* version     : v1.0")
+	call setline(line(".")+3,"* description : ")
+	call setline(line(".")+4,"*     ")
+	call setline(line(".")+5,"* analyse     : ")
+	call setline(line(".")+6,"*     ")
+	call setline(line(".")+7,"*/")
+	call setline(line(".")+8,"")
+	call setline(line(".")+9,"#include <iostream>")
+	call setline(line(".")+10,"using namespace std;")
+	call setline(line(".")+11,"")
+	call setline(line(".")+12,"int main(int argc, char *argv[] ){")
+	call setline(line(".")+13,"     ")
+	call setline(line(".")+14,"}")
+	exec ":w"
+endfunc
+autocmd BufNewFile,BufEnter main.cpp exec ":call SetTitleForMainCpp()"
+
+" 设置.h头文件的文件头
+function! SetTitleForHpp()
+	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
+	if l:is_empty == 0
+		return
+	endif
+	call setline(1,"#ifndef ".toupper(expand("%:r")))
+	call setline(line(".")+1,"#define ".toupper(expand("%:r")))
+	call setline(line(".")+2,"")
+	call setline(line(".")+3,"")
+	call setline(line(".")+4,"#endif")
+	exec ":w"
+endfunc
+autocmd BufNewFile,BufEnter *.hpp,*.h exec ":call SetTitleForHpp()"
+
+" 增加自定义修改文件名: rename newfilename
+:command! -nargs=1 Rename let tpname = expand('%:t') | saveas <args> | edit <args> | call delete(expand(tpname))
+
+" 自定义buffer跳转,不跳到quickfix, 不跳转到现有window所打开的buffer
+" 玄学: 如果在nerdtree打开的窗口,会自动到最后的窗口切换buf
+function! ChangeBuf(direction)
+	" let cur_buf_num=bufnr('%')
+	" let buf_num = 0
+	" let all_win_buf_num = []
+	" let win_num = winnr()
+	" let cur_win_num = 0
+
+	" exec "windo call add(all_win_buf_num, winbufnr(winnr()))"
+	" exec "wincmd p"
+	" while cur_buf_num != buf_num
+	while 1
+		try
+			exec "b".a:direction
+		catch /^Vim\%((\a\+)\)\=:E/	" catch all Vim errors
+			exec "w"
+			exec "b".a:direction
+			echom "auto save before go to next buffer"
+		endtry
+		" let buf_num = bufnr('%')
+		" if index(all_win_buf_num,buf_num) != -1
+		"     continue
+		" endif
+		if( &buftype != "quickfix" )
+			return
+		endif
+	endwhile
+endfunc
+
+" when you enter a project dir or subdir, the function
+" will find the project root dir throung find some file
+" that only exists in project root
+function! SetCppProject()
+	if has("cscope")
+		"add any database in current dir
+		set csto=0
+		set cst
+		set csverb
+		set cspc=3
+		if filereadable("cscope.out")
+			let g:cur_cpp_project_dir=getcwd()
+			silent! cs kill -1
+			silent! exec "cs add cscope.out " g:cur_cpp_project_dir
+		else
+			let cscope_file=findfile("cscope.out", ".;")
+
+			" can't find project root, exit
+			if empty(cscope_file)
+				return
+			endif
+
+			let g:cur_cpp_project_dir=matchstr(cscope_file, ".*/")
+			if !empty(cscope_file) && filereadable(cscope_file)
+				silent! cs kill -1
+				silent! exec "cs add" cscope_file g:cur_cpp_project_dir
+			endif
+		endif
+	endif
+endfunction
+auto vimenter * exec ":call SetCppProject()"
+auto BufWritePost *.cpp,*.hpp,*.h,*.c, exec ":call UpdateScsopeOut()"
+
+function! UpdateScsopeOut()
+	if !exists('g:cur_cpp_project_dir') || empty(expand('%')) || match(getcwd(),g:cur_cpp_project_dir) == -1
+		return
+	endif
+	exec "silent! VimTool update_cscope ".g:cur_cpp_project_dir
+	exec "silent! cs reset"
+endfunc
+
