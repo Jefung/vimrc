@@ -52,7 +52,6 @@ done
 
 # if dirname/filename is exists, move it to dirname/filename.backup
 function fileExists(){
-	echo $1/$2
 	if [ -d $1 ];then
 		if [ -f ${1}/${2} ] || [ -L ${1}/${2} ];then
 			output ${1}/${2}"文件存在,进行备份" "yellow"
