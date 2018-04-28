@@ -20,6 +20,21 @@ autocmd vimenter * NERDTree
 " open NERDTree automatically when vim starts up on opening a directory
 " 自动打开nerdtree当你vim打开目录时候
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endi
+" auto BufNewFile * exec ":NERDTreeFocus <CR> R <C-w><C-p>"
+" auto BufNewFile * exec ":NERDTreeFocus <CR> R <C-w><C-p>"
+
+" auto refresh nerdtree
+" 自动刷新树
+auto BufNewFile * exec "call RefreshNERDTree()"
+
+function! RefreshNERDTree()
+	if g:NERDTree.IsOpen()
+		exec " NERDTreeFocus | normal R \<C-w>\<C-p>"
+	else
+		return
+	endif
+	
+endfunc
 
 " open a NERDTree automatically when vim starts up if no files were specified
 " vim不指定具体文件打开时，自动使用nerdtree

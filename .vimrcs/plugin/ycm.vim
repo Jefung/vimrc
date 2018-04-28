@@ -1,5 +1,6 @@
 
 """""""""""""""""""""""" Key Map """""""""""""""""""""""""""
+let mapleader=";"
 nnoremap <Leader>jd :YcmCompleter GoTo<CR>
 nnoremap <Leader>jg :YcmComplete GetType<CR>
 

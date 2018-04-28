@@ -2,7 +2,9 @@
 """""""""""""""""""""""" Key Map """""""""""""""""""""""""""
 " nmap <leader>/  :call NERDComment("n", "Toggle")<CR>
 " 映射到commet默认的快捷注释（单多行任意注释）
-map <leader>/ <leader>c<Space>
+nmap <leader>/ <leader>c<Space>
+vmap <leader>/ <leader>c<Space>
+
 """""""""""""""""""""""" setting """""""""""""""""""""""""""
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1

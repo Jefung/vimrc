@@ -1,7 +1,7 @@
 
 """""""""""""""""""""""" Key Map """""""""""""""""""""""""""
-nmap <Leader>en :lnext<CR>
-nmap <Leader>ep :lprevious<CR>
+" noremap <Leader>en :lnext<CR>
+" noremap <Leader>ep :lprevious<CR>
 
 """""""""""""""""""""""" setting """""""""""""""""""""""""""
 
@@ -25,13 +25,14 @@ let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='►'
 let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
 
+let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++ -I/usr/bin'
+
 let g:syntastic_cpp_checkers = ['clang_check']
-" let g:syntastic_cpp_clang_check_post_args = "-I/home/jefung/repos/xml_tree/include"
-" let g:syntastic_c_clang_check_args = "-I/home/jefung/repos/xml_tree/include"
-" let g:syntastic_cpp_clang_check_args = "-I/home/jefung/repos/xml_tree/include"
+
+" !Notice: 
+" this is a solution to add header path to clang_check
+" I assign  absolute path to it. so I always add header path to it 
 let g:syntastic_clang_check_config_file = "~/.syntastic_clang_check_config_file"
 
-" let g:syntastic_cpp_include_dirs = ["/home/jefung/repos/xml_tree/include/interface"]
-" let g:syntastic_cpp__clang_check_args = "-p=/home/jefung/usr/llvmbuild"
 " 关闭buffer时连同报错框一起关闭
 cabbrev <silent> bd <C-r>=(getcmdtype()==#':' && getcmdpos()==1 ? 'lclose\|bdelete' : 'bd')<CR>
