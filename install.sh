@@ -12,43 +12,6 @@
 
 #!/bin/bash
 
-declare -A file_map
-
-homedir="$(echo ~)"
-file_map=( 
-		[.vimrc]=${homedir}
-		[.vimrcs]=${homedir} 
-		[.vim]=${homedir}
-		[.ycm_extra_conf.py]=${homedir}/repos/vimrc/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm
-	)
-
-# if no argument, set soft link for all files in file_map
-if [ $# == 0 ];then
-	for filename in $(echo ${!file_map[*]})
-		do
-			fileExists "${file_map[$filename]}" "$filename"
-			ln -s $(pwd)/${filename} ${file_map[$filename]}
-			output "ln -s $(pwd)/${filename} ${file_map[$filename]}" "blue"
-		done
-	
-	exit 0;
-fi
-
-
-while getopts "f:" arg #选项后面的冒号表示该选项需要参数
-do
-        case $arg in
-             f)
-				fileExists "${file_map[$OPTARG]}" "$OPTARG"  #参数存在$OPTARG中
-				ln -s $(pwd)/${OPTARG} ${file_map[$OPTARG]}
-				output "ln -s $(pwd)/${OPTARG} ${file_map[$OPTARG]}" "blue"
-				exit 0
-                ;;
-             ?)  #当有不认识的选项的时候arg为?
-            echo "unkonw argument"
-        ;;
-        esac
-done
 
 # if dirname/filename is exists, move it to dirname/filename.backup
 function fileExists(){
@@ -98,5 +61,43 @@ for key in $(echo ${!color_map[*]})
 echo ${1}
 }
 
+declare -A file_map
+
+homedir="$(echo ~)"
+file_map=( 
+		[.clang-format]=${homedir}
+		[.vimrc]=${homedir}
+		[.vimrcs]=${homedir} 
+		[.vim]=${homedir}
+		[.ycm_extra_conf.py]=${homedir}/repos/vimrc/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm
+	)
+
+# if no argument, set soft link for all files in file_map
+if [ $# == 0 ];then
+	for filename in $(echo ${!file_map[*]})
+		do
+			fileExists "${file_map[$filename]}" "$filename"
+			ln -s $(pwd)/${filename} ${file_map[$filename]}
+			output "ln -s $(pwd)/${filename} ${file_map[$filename]}" "blue"
+		done
+	
+	exit 0;
+fi
+
+
+while getopts "f:" arg #选项后面的冒号表示该选项需要参数
+do
+        case $arg in
+             f)
+				fileExists "${file_map[$OPTARG]}" "$OPTARG"  #参数存在$OPTARG中
+				ln -s $(pwd)/${OPTARG} ${file_map[$OPTARG]}
+				output "ln -s $(pwd)/${OPTARG} ${file_map[$OPTARG]}" "blue"
+				exit 0
+                ;;
+             ?)  #当有不认识的选项的时候arg为?
+            echo "unkonw argument"
+        ;;
+        esac
+done
 
 
