@@ -12,4 +12,5 @@ nnoremap <leader>fm :Autoformat <BAR> w <CR>
 " let g:formatters_cpp = ['clang-format']
 " let g:formatdef_clangformat_objc = '"clang-format -style=~/.clang-format"'
 let g:formatdef_clangformat_objc = '"clang-format -style=file"'
-let g:formatters_java = ['harttle']
+let verbose=1
+" let g:formatters_java = ['harttle']

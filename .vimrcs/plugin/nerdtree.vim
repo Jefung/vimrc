@@ -15,7 +15,7 @@ let g:NERDTreeDirArrowCollapsible = '-'
 
 " open nerdtree when use vim
 " 使用vim时自动打开nerdtree
-autocmd vimenter * NERDTree
+" autocmd vimenter * NERDTree
 
 " open NERDTree automatically when vim starts up on opening a directory
 " 自动打开nerdtree当你vim打开目录时候

@@ -7,7 +7,7 @@
 
 ######## 个人配置 ###########
 # 从不在圆括号之前加空格,如果自己手动加则不作处理
-SpaceBeforeParens SBPO_Never
+# SpaceBeforeParens SBPO_Never(error here, need to modify value)
 
 #如果为真（true），分析格式化过的文件中最常见的&和*的对齐方式。然后指针对齐仅作为回退
 DerivePointerAlignment: false

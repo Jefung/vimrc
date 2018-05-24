@@ -28,6 +28,37 @@ filetype plugin indent on    " required
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""" general setting """""""""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 设置alt可用于快捷绑定
+" 存在bug: esc 加　按键太快会出问题,暂时不用
+" exec "set <M-a>=\ea"
+" exec "set <M-b>=\eb"
+" exec "set <M-c>=\ec"
+" exec "set <M-d>=\ed"
+" exec "set <M-e>=\ee"
+" exec "set <M-f>=\ef"
+" exec "set <M-g>=\eg"
+" exec "set <M-h>=\eh"
+" exec "set <M-i>=\ei"
+" exec "set <M-j>=\ej"
+" exec "set <M-k>=\ek"
+" exec "set <M-l>=\el"
+" exec "set <M-m>=\em"
+" exec "set <M-n>=\en"
+" exec "set <M-o>=\eo"
+" exec "set <M-p>=\ep"
+" exec "set <M-q>=\eq"
+" exec "set <M-r>=\er"
+" exec "set <M-s>=\es"
+" exec "set <M-t>=\et"
+" exec "set <M-u>=\eu"
+" exec "set <M-v>=\ev"
+" exec "set <M-w>=\ew"
+" exec "set <M-x>=\ex"
+" exec "set <M-y>=\ey"
+" exec "set <M-z>=\ez"
+" set ttimeout ttimeoutlen=100
+
+" imap <M-d> :call GotoDefine() <CR>
 let mapleader=";"
 " 设置自动读取
 set autoread
@@ -111,7 +142,9 @@ syntax enable
 " syntax off
 
 " 主题颜色，加载对应的 .vim/color 目录下文件
+" colorscheme molokai
 colorscheme monokai
+" colorscheme solarized
 
 " 自动回到上次的位置
 if has("autocmd")
@@ -229,7 +262,7 @@ Plugin 'Valloric/YouCompleteMe'
 "########################
 "    <自动切换输入法>   #
 "########################
-Plugin 'lilydjwg/fcitx.vim'
+" Plugin 'lilydjwg/fcitx.vim'
 
 
 "########################
@@ -323,6 +356,7 @@ Plugin 'rking/ag.vim'
 Plugin 'w0rp/ale'
 
 
+
 let vimrcs = $HOME."/.vimrcs"
 
 " auto load *.vim in the dir argument you give
@@ -349,7 +383,7 @@ set textwidth=140
 
 " 对markdown格式的文件开启英文单词拼写检查
 " open English word spell check for markdown
-autocmd FileType markdown,mkd setlocal spell spelllang=cjk,en_us
+autocmd FileType markdown,mkd setlocal spell spelllang=en_us,cjk
 " 当修改.vimrc，自动加载
 autocmd! bufwritepost $HOME/.vimrc source %
 
@@ -461,6 +495,10 @@ autocmd BufNewFile,BufEnter *.hpp,*.h exec ":call SetTitleForHpp()"
 " 自定义buffer跳转,不跳到quickfix, 不跳转到现有window所打开的buffer
 " 玄学: 如果在nerdtree打开的窗口,会自动到最后的窗口切换buf
 function! ChangeBuf(direction)
+	if exists("b:NERDTree") || &filetype=="help" || &ft=="qf"
+		echo "can't change buffer"
+		return
+	endif
 	" let cur_buf_num=bufnr('%')
 	" let buf_num = 0
 	" let all_win_buf_num = []
@@ -476,7 +514,7 @@ function! ChangeBuf(direction)
 		catch /^Vim\%((\a\+)\)\=:E/	" catch all Vim errors
 			exec "w"
 			exec "b".a:direction
-			echom "auto save before go to next buffer"
+			" echom "auto save before go to next buffer"
 		endtry
 		" let buf_num = bufnr('%')
 		" if index(all_win_buf_num,buf_num) != -1
@@ -494,10 +532,6 @@ endfunc
 function! SetCppProject()
 	if has("cscope")
 		"add any database in current dir
-		set csto=0
-		set cst
-		set csverb
-		set cspc=3
 		if filereadable("cscope.out")
 			let g:cur_cpp_project_dir=getcwd()
 			silent! cs kill -1
@@ -516,10 +550,20 @@ function! SetCppProject()
 				silent! exec "cs add" cscope_file g:cur_cpp_project_dir
 			endif
 		endif
+		exec "call CurCppProjectSetting()"
 	endif
 endfunction
 auto vimenter * exec ":call SetCppProject()"
 auto BufWritePost *.cpp,*.hpp,*.h,*.c, exec ":call UpdateScsopeOut()"
+
+function! CurCppProjectSetting()
+	if !exists("g:cur_cpp_project_dir")
+		return
+	endif
+
+	" set ctrp map to search current cpp project
+	nnoremap <C-P> :execute("CtrlP ".g:cur_cpp_project_dir) <CR>
+endfunc
 
 function! UpdateScsopeOut()
 	if !exists('g:cur_cpp_project_dir') || empty(expand('%')) || match(getcwd(),g:cur_cpp_project_dir) == -1
@@ -528,4 +572,49 @@ function! UpdateScsopeOut()
 	exec "silent! VimTool update_cscope ".g:cur_cpp_project_dir
 	exec "silent! cs reset"
 endfunc
+Plugin 'lambdalisue/vim-manpager'
 
+function! AddInclude()
+	let match = search("#include ","nb")
+	if(match==0)
+		let match = search("#include ","n")
+	endif
+	if(match==0)
+		echo "can't match '#include'"
+		return
+	endif
+    let filename = input("input header file name: ","")
+	if(filename == "")
+		echo "filename is empty, do nothing"
+		return
+	endif
+	" echo filename
+	if matchstr(filename,'".*"') == ""
+		call append(line(match)+1, '#include <'.filename.'>')
+	else
+		call append(line(match)+1, '#include '.filename)
+	endif
+	" echo match
+endfunc
+function! AddIncludeFilename(filename)
+	" echo a:filename
+	let match = search("#include ","nb")
+	if(match==0)
+		let match = search("#include ","n")
+	endif
+	if(match==0)
+		echo "can't match '#include'"
+		return
+	endif
+	if(a:filename == "")
+		echo match+1
+		call append(match, '#include ""')
+		exec match+1
+		exec "normal $"
+		return
+	endif
+	call append(line(match)+1, '#include <'.a:filename.'>')
+endfunc
+" command!  -nargs=0 AddInclude call AddInclude()
+command!  -nargs=1 AH call AddIncludeFilename(<args>)
+" command!  -nargs=0 AH call AddIncludeFilename("")

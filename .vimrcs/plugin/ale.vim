@@ -2,6 +2,8 @@ nnoremap <Leader>en :ALENext<CR>
 nnoremap <Leader>ep :ALEPrevious<CR>
 nnoremap <Leader>n :ALENext<CR>
 nnoremap <Leader><Space> :ALEPrevious<CR>
+nnoremap <Leader>j :ALENext<CR>
+nnoremap <Leader>k :ALEPrevious<CR>
 " Write this in your vimrc file
 " let g:ale_set_loclist = 0
 " let g:ale_set_quickfix = 1
@@ -9,8 +11,11 @@ nnoremap <Leader><Space> :ALEPrevious<CR>
 " let g:ale_keep_list_window_open = 1
 
 "自定义error和warning图标
-let g:ale_sign_error = '✗'
-let g:ale_sign_warning = '►'
+let g:ale_sign_error = 'e'
+let g:ale_sign_warning = 'w'
+" let g:ale_change_sign_column_color = 1
+let g:ale_sign_column_always = 1
+let g:ale_set_signs = 1
 
 let g:ale_linters = {'c': 'clang'}
 let g:ale_linters = { 'cpp': ['clang'] }

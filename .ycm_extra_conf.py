@@ -81,6 +81,8 @@ get_python_inc(),
 '/usr/include/c++/4.8.2/',
 '-I',
 '/home/jefung/repos/xml_tree/include',
+'-I',
+'/home/jefung/repos/http_server_cpp/include',
 ]
 
 # Clang automatically sets the '-std=' flag to 'c++14' for MSVC 2015 or later,

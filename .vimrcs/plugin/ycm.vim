@@ -1,8 +1,8 @@
 
 """""""""""""""""""""""" Key Map """""""""""""""""""""""""""
-let mapleader=";"
-nnoremap <Leader>jd :YcmCompleter GoTo<CR>
-nnoremap <Leader>jg :YcmComplete GetType<CR>
+" let mapleader=";"
+" nnoremap <Leader>jd :YcmCompleter GoTo<CR>
+" nnoremap <Leader>jg :YcmComplete GetType<CR>
 
 
 
@@ -17,6 +17,9 @@ let g:ycm_complete_in_comments=1
 let g:ycm_complete_in_strings=1
 let g:ycm_collect_identifiers_from_tag_files = 1
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
+" let g:ycm_key_list_previous_completion = ['<C-TAB>', '<Up>']
+" let g:UltiSnipsExpandTrigger = "<CR>"
+
 " let g:ycm_key_invoke_completion = '<tab>'
 " 移除ycm对c家族的代码检测，采用syntastic
 let g:ycm_show_diagnostics_ui = 0

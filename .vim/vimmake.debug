@@ -1,0 +1,13 @@
+#! /bin/sh
+# guake -s 0 -e "fg;ls;ls;ls;ls;ls"
+
+# if [ $TEST ];then
+#     echo $TEST
+#     echo "...."
+#     export TEST=${TEST}+1
+# else
+#     export TEST=1
+# fi
+cd $VIM_TARGET
+make debug
+cd -
