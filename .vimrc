@@ -20,13 +20,18 @@ Plug 'vim-airline/vim-airline'
 " Plug 'sgur/vim-textobj-parameter'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'sbdchd/neoformat'
-Plug 'scrooloose/nerdtree'
-"Plug 'terryma/vim-multiple-cursors'
+Plug 'scrooloose/nerdtree',{ 'on':  'NERDTreeToggle'  }
+" Plug 'Shougo/echodoc.vim'
+" Plug 'terryma/vim-multiple-cursors'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'scrooloose/nerdcommenter'
+" Plug 'tenfyzhong/CompleteParameter.vim'
 Plug 'jiangmiao/auto-pairs'
-" Plug 'Shougo/echodoc.vim'
+Plug 'szw/vim-maximizer'
+Plug 'skywind3000/vim-preview'
+Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)']  }
+Plug 'Jefung/h2cppx'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -145,6 +150,8 @@ let autosave=2
 " 换行
 set wrap
 
+set scrolloff=15
+
 " 语法高亮
 syntax enable
 " syntax off
@@ -199,11 +206,20 @@ map L $
 " map J G
 
 " 窗口移动
-" move window
+" move indow
 map <C-j> <C-W>j
 map <C-h> <C-W>h
 map <C-k> <C-W>k
 map <C-l> <C-W>l
+
+" 窗口缩放
+nnoremap <C-W><C-L> :vertical resize +10<CR>
+nnoremap <C-W><C-H> :vertical resize -10<CR>
+nnoremap <C-W><C-K> :resize -10<CR>
+nnoremap <C-W><C-J> :resize +10<CR>
+
+" 窗口操作
+nnoremap <C-W>q :q<CR>
 
 " 全局复制
 " systematic clipboard
@@ -248,5 +264,58 @@ endfunc
 
 nmap <Space>j :ALENext<CR>
 nmap <Space>k :ALEPrevious<CR>
-nmap <Space>n :echo 111<CR>
 
+function! Mv()
+	    let old_name = expand('%')
+	    let new_name = input('New file name: ', expand('%'), 'file')
+	    if new_name != '' && new_name != old_name
+   		     exec ':saveas ' . new_name
+       		 exec ':silent !rm ' . old_name
+	        redraw!
+		endif
+endfunction
+
+function! MvCurBuf(filename)
+	if a:filename != expand('%')
+   		     exec ':saveas ' . new_name
+       		 exec ':silent !rm ' . old_name
+   			 redraw!
+	endif
+endfunc
+
+command! -nargs=0 Mv call Mv()
+command! -nargs=1 MvCurBuf call Mv(<args>)
+
+function! AddCppHeaderFile()
+	let final_header_line = search('#include',"be")
+	if final_header_line == 0
+		call append(0,"#include ")
+		call cursor(1,9999)
+		exe "normal! a"
+	else
+		call append(line('.'), "#include ")
+		call cursor(line('.')+1,9999)
+	endif
+endfunction
+nmap <leader>ah :call AddCppHeaderFile()<CR>
+
+" 配合cppman, tmux查看c++文档
+command! -nargs=+ Cppman silent! call system("tmux split-window cppman -S" . expand(<q-args>))
+autocmd FileType cpp nnoremap <silent><buffer> K <Esc>:Cppman <cword><CR>
+autocmd FileType c nnoremap <silent><buffer> K <Esc>:Cppman <cword><CR>
+
+" 自动补全hpp文件头
+" 设置.h头文件的文件头
+function! SetTitleForHpp()
+	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
+	if l:is_empty == 0
+		return
+	endif
+	call setline(1,"#ifndef ".toupper(expand("%:r")))
+	call setline(line(".")+1,"#define ".toupper(expand("%:r")))
+	call setline(line(".")+2,"")
+	call setline(line(".")+3,"")
+	call setline(line(".")+4,"#endif")
+	" exec ":w"
+endfunc
+autocmd BufNewFile,BufEnter *.hpp,*.h exec ":call SetTitleForHpp()"

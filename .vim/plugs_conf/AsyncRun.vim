@@ -29,16 +29,20 @@ function! AsyncRunSimpleFile()
 	exec "w"
 	let CC="clang++"
 	let CPPFLAG=" -Wall "
+	let CPPFLAG .=" -g "
 	let CPPFLAG .= " -Wno-unused-command-line-argument"
-	let CPPFLAG=" -Wno-unused-variable"
-	let CPPFLAG .= " -std=c++11"
+	let CPPFLAG .=" -Wno-unused-variable"
+	let CPPFLAG .= " -std=c++11 -lpthread"
 
-	if search("mpi\.h") != 0 
-		let CPPFLAG .="***"
+	" if search("mpi\.h") != 0
+	"     let CPPFLAG .="***"
+	" endif
+	if search("boost") != 0
+		let CPPFLAG .=" -lboost_system "
 	endif
-
-	"echo "AsyncRun ".CC." ".CPPFLAG."'".VIM_FILEPATH."' -o '".VIM_FILEDIR."/".VIM_FILENOEXT
-	exec "AsyncRun ".CC." ".CPPFLAG." '$(VIM_FILEPATH)'  -o '$(VIM_FILEDIR)/$(VIM_FILENOEXT)' && $(VIM_FILEDIR)/$(VIM_FILENOEXT)"
-	"exec "AsyncRun -raw -cwd='$(VIM_FILEDIR)' $(VIM_FILEDIR)/$(VIM_FILENOEXT)"
+	if search("boost/thread") != 0
+		let CPPFLAG .=" -lboost_thread "
+	endif
+	exec "AsyncRun ".CC." ".CPPFLAG." '$(VIM_FILEPATH)'  -o '/tmp/cpp_build/$(VIM_FILENOEXT)' && sudo /tmp/cpp_build/$(VIM_FILENOEXT)"
 endfunc
 

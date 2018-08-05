@@ -36,3 +36,32 @@ int main(int argc, char *argv[]){
 	${1}
 }
 endsnippet
+
+snippet temp "template <...."
+template <typename ${1}
+endsnippet
+
+snippet fa "for auto"
+for(auto ${1}){
+
+}
+endsnippet
+
+snippet =delete "class = operator delete"
+${1} & operator=(const $1&) = delete;
+endsnippet
+
+snippet test "注解" <flag>
+${1:name}
+${1/(\w+).*/${1}/}
+endsnippet
+
+snippet copy "c++并发编程"
+// copy from <<C++并发编程>> P${1}
+endsnippet
+
+snippet struct "struct"
+struct ${1}{
+	${2}
+};
+endsnippet

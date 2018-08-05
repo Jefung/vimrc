@@ -4,6 +4,10 @@
 nmap <leader>/ <leader>c<Space>
 vmap <leader>/ <leader>c<Space>
 
+map <Leader>cs :GscopeFind s <C-R><C-W><CR>
+" unmap <Leader>cs
+
+
 """""""""""""""""""""""" setting """""""""""""""""""""""""""
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1

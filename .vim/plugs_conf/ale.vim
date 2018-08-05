@@ -20,15 +20,19 @@ let g:ale_set_signs = 1
 
 "let g:ale_linters = {'c': 'clang'}
 let g:ale_linters = { 'cpp': ['clang'] }
-let g:ale_cpp_clang_options = "
-			\ -std=c++11 "
+let g:ale_cpp_clang_options = "  -std=c++11 "
+			" \ -Wall
+			" \ -O2
 			"\ -stdlib=libc++ 
 			"\ -isystem/usr/include/c++/5/
 			"\ -isystem/usr/include/c++/5/x86_64-redhat-linux/ 
 
+let b:ale_fixers = {"cpp":['clang-format']}
 
 "文件内容发生变化时不进行检查
-let g:ale_lint_on_text_changed = 'never'
+" let g:ale_lint_on_text_changed = 'insert'
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
 
 ""打开文件时不进行检查
 "let g:ale_lint_on_enter = 0
@@ -41,4 +45,4 @@ let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
- "let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
+ 

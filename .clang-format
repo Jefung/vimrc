@@ -25,7 +25,7 @@ ObjCSpaceAfterProperty: false
 ObjCBlockIndentWidth: 4
  
 #如果为真（true），这条语句：“if(a)return;”将被放在同一行
-AllowShortIfStatementsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: false
  
 #如果为假（false），空格将在赋值操作符之前被移除。
 SpaceBeforeAssignmentOperators: true
@@ -43,13 +43,14 @@ ColumnLimit: 0
 AlignTrailingComments: true
  
 #括号后加空格
-SpaceAfterCStyleCast: true
+# SpaceAfterCStyleCast: false
 
 #如果为真（true）, 在模板声明“template<...>”后总是换行
 AlwaysBreakTemplateDeclarations: true
 
 
 
+AllowShortFunctionsOnASingleLine: Empty
 ######## default .clang-format ########
 #
 # ---
@@ -147,13 +148,14 @@ AlwaysBreakTemplateDeclarations: true
 # SpaceAfterCStyleCast: false
 # SpaceAfterTemplateKeyword: true
 # SpaceBeforeAssignmentOperators: true
-# SpaceBeforeParens: ControlStatements
+SpaceBeforeParens: Never
+# SpacesInParentheses: true
 # SpaceInEmptyParentheses: false
 # SpacesBeforeTrailingComments: 1
 # SpacesInAngles:  false
 # SpacesInContainerLiterals: true
 # SpacesInCStyleCastParentheses: false
-# SpacesInParentheses: false
+#SpacesInParentheses: false
 # SpacesInSquareBrackets: true
 # Standard:        Cpp11
 # TabWidth:        8

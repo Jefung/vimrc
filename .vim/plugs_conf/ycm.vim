@@ -16,3 +16,5 @@ let g:ycm_collect_identifiers_from_comments_and_strings = 1
 " 移除ycm对c家族的代码检测，采用syntastic
 let g:ycm_show_diagnostics_ui = 0
 let g:ycm_use_ultisnips_completer = 1
+
+nnoremap <leader>gt :YcmCompleter GoTo<CR>
