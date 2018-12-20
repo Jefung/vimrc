@@ -1,3 +1,4 @@
+
 """""""""""""""""""""""" Key Map """""""""""""""""""""""""""
 map <F9> :NERDTreeToggle<CR>
 
@@ -25,21 +26,21 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 
 " auto refresh nerdtree
 " 自动刷新树
-auto BufNewFile * exec "call RefreshNERDTree()"
+" auto BufNewFile * exec "call RefreshNERDTree()"
 
-function! RefreshNERDTree()
-	if g:NERDTree.IsOpen()
-		exec " NERDTreeFocus | normal R \<C-w>\<C-p>"
-	else
-		return
-	endif
-	
-endfunc
+" function! RefreshNERDTree()
+"     if g:NERDTree.IsOpen()
+"         exec " NERDTreeFocus | normal R \<C-w>\<C-p>"
+"     else
+"         return
+"     endif
+"
+" endfunc
 
 " open a NERDTree automatically when vim starts up if no files were specified
 " vim不指定具体文件打开时，自动使用nerdtree
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" autocmd StdinReadPre * let s:std_in=1
+" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " 当vim中没有其他文件，值剩下nerdtree的时候，自动关闭窗口
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif

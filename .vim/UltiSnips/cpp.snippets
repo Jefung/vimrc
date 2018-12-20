@@ -1,6 +1,35 @@
-snippet init "intit empty cpp file"
+snippet fi "for i" b
+for(int i = 0; i < ${0}; i++){
+}
+endsnippet
+
+snippet fj "for j" b
+for(int j = 0; j < ${0}; j++){
+}
+endsnippet
+
+snippet fk "for k" b
+for(int k = 0; k < ${0}; k++){
+}
+endsnippet
+
+snippet fij "for i,j"
+for(int i = 0; i < ${1}; i++){
+	for(int j = 0; j < ${2}; j++){
+	}
+}
+endsnippet
+
+snippet endl "std::cout << endl"
+std::cout << endl;
+endsnippet
+
+snippet std "use namespace std" b
+using namespace std;
+endsnippet
+
+snippet init "init empty cpp file"
 #include <iostream>
-#include <string>
 using namespace std;
 
 int main(int argc, char *argv[]){
@@ -8,36 +37,31 @@ int main(int argc, char *argv[]){
 }
 endsnippet
 
+snippet temp "template <...."
+template <typename ${1}
+endsnippet
 
+snippet fa "for auto"
+for(auto ${1}){
 
-snippet class "class" b
-class ${1:Class}{
-  public:
-    $1();
-    ~$1();
-  private:
+}
+endsnippet
+
+snippet =delete "class = operator delete"
+${1} & operator=(const $1&) = delete;
+endsnippet
+
+snippet test "注解" <flag>
+${1:name}
+${1/(\w+).*/${1}/}
+endsnippet
+
+snippet copy "c++并发编程"
+// copy from <<C++并发编程>> P${1}
+endsnippet
+
+snippet struct "struct"
+struct ${1}{
+	${2}
 };
-endsnippet
-
-snippet fii "for i loop"
-for (int i = 0; i < ${1:max_num}; i++) {
-}
-endsnippet
-
-snippet fjj "for j loop"
-for (int j = 0; j < ${1:max_num}; j++) {
-}
-endsnippet
-snippet fij "for i,j double loop"
-for (int i = 0; i < ${1:max_num}; i++) {
-	for (int j = 0; j < $1; j++) {
-		${2}
-	}
-}
-endsnippet
-
-snippet fun "function def" b
-${2:void} ${1:name}($3){
-    ${4:${VISUAL}}      // <--- 这行加了个 ${VISUAL}
-}
 endsnippet

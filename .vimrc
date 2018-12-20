@@ -1,65 +1,78 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+set runtimepath+=~/.vim_runtime
+let mapleader = ";"
+" Plugins will be downloaded under the specified directory.
+call plug#begin('~/.vim/plugged')
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+" Declare the list of plugins.
+Plug 'tpope/vim-sensible'
+Plug 'junegunn/seoul256.vim'
+Plug 'Valloric/YouCompleteMe'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'skywind3000/gutentags_plus'
+Plug 'Yggdroot/LeaderF'
+Plug 'skywind3000/asyncrun.vim'
+Plug 'w0rp/ale'
+Plug 'vim-airline/vim-airline'
+" Plug 'kana/vim-textobj-user'
+" Plug 'kana/vim-textobj-indent'
+" Plug 'kana/vim-textobj-syntax'
+" Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
+" Plug 'sgur/vim-textobj-parameter'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'sbdchd/neoformat'
+Plug 'scrooloose/nerdtree',{ 'on':  'NERDTreeToggle'  }
+" Plug 'Shougo/echodoc.vim'
+" Plug 'terryma/vim-multiple-cursors'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'scrooloose/nerdcommenter'
+" Plug 'tenfyzhong/CompleteParameter.vim'
+Plug 'jiangmiao/auto-pairs'
+Plug 'szw/vim-maximizer'
+Plug 'skywind3000/vim-preview'
+Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)']  }
+Plug 'Jefung/h2cppx'
 
-" The following are examples of different formats supported.
+" List ends here. Plugins become visible to Vim after this call.
+call plug#end()
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
+" 从打开目录向上查找,只到找到.git文件夹,并设置.git文件夹所在目录
+" 为项目的根目录g:pro.如果没有找到,则g:project_dir不存在
+function! SetProjectDir()
+	let project_dir=finddir(".git", ".;")
+	" can't find project root, exit
+	if empty(project_dir)
+		return
+	endif
+	let g:project_dir=matchstr(project_dir, ".*/")
+endfunction
+auto vimenter * exec ":call SetProjectDir()"
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""""""""""""""""""""""""""""""""""""""""""" general setting """""""""""""""""""""""""""""""""""""""""""
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" 设置alt可用于快捷绑定
-" 存在bug: esc 加　按键太快会出问题,暂时不用
-" exec "set <M-a>=\ea"
-" exec "set <M-b>=\eb"
-" exec "set <M-c>=\ec"
-" exec "set <M-d>=\ed"
-" exec "set <M-e>=\ee"
-" exec "set <M-f>=\ef"
-" exec "set <M-g>=\eg"
-" exec "set <M-h>=\eh"
-" exec "set <M-i>=\ei"
-" exec "set <M-j>=\ej"
-" exec "set <M-k>=\ek"
-" exec "set <M-l>=\el"
-" exec "set <M-m>=\em"
-" exec "set <M-n>=\en"
-" exec "set <M-o>=\eo"
-" exec "set <M-p>=\ep"
-" exec "set <M-q>=\eq"
-" exec "set <M-r>=\er"
-" exec "set <M-s>=\es"
-" exec "set <M-t>=\et"
-" exec "set <M-u>=\eu"
-" exec "set <M-v>=\ev"
-" exec "set <M-w>=\ew"
-" exec "set <M-x>=\ex"
-" exec "set <M-y>=\ey"
-" exec "set <M-z>=\ez"
-" set ttimeout ttimeoutlen=100
+" auto load *.vim in the dir argument you give
+function! LoadVimFile(dir)
+	if finddir(a:dir) != ""
+		let vim_files = split(globpath(a:dir,"*.vim"),'\n')
+		for f in vim_files
+			exec "source " f
+		endfor
 
-" imap <M-d> :call GotoDefine() <CR>
-let mapleader=";"
+		let dirs = split(globpath(a:dir,"*"),'\n')
+		for subdir in dirs
+			if finddir(subdir) != ""
+				exec "call LoadVimFile(subdir)"
+			endif
+		endfor
+	else
+		echo a:dir." is not exists"
+
+	endif
+endfunc
+exec "call LoadVimFile('~/.vim/plugs_conf')"
+
+""""""""""""""""""""""""""" common settting """""""""""""""""""""""
+colorscheme monokai
+set noshowmode
+
 " 设置自动读取
 set autoread
 
@@ -137,6 +150,8 @@ let autosave=2
 " 换行
 set wrap
 
+set scrolloff=15
+
 " 语法高亮
 syntax enable
 " syntax off
@@ -160,13 +175,6 @@ autocmd! bufwritepost .vimrc source ~/.vimrc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""   Shortcut  """""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"   Leader + q : quit
-"   Leader + w : save
-"   Leader + o : open
-"   Leader + r : refresh
-"   Leader + j : ycm jump Define
-"   Leader + e : syntastic
-let mapleader = ";"
 
 " help  :h key-notation
 nmap <Leader>q :b# <BAR> bd# <CR>
@@ -175,17 +183,9 @@ nmap <Tab> :call ChangeBuf('n') <CR>
 nmap <Leader><Tab> :call ChangeBuf('p') <CR>
 
 
-" find file
-
 " 快速注释
 " quickly comment
-nmap <leader>/ <leader>c<Space>
-
-" php 注释
-" phpdoc
-inoremap <C-\> <ESC>:call PhpDocSingle()<CR>
-nnoremap <C-\> :call PhpDocSingle()<CR>
-vnoremap <C-\> :call PhpDocRange()<CR>
+map <leader>/ <leader>c<Space>
 
 " 回车增加空行
 " nmap  <silent> <C-m> :call append('.','') <CR>
@@ -206,11 +206,20 @@ map L $
 " map J G
 
 " 窗口移动
-" move window
+" move indow
 map <C-j> <C-W>j
 map <C-h> <C-W>h
 map <C-k> <C-W>k
 map <C-l> <C-W>l
+
+" 窗口缩放
+nnoremap <C-W><C-L> :vertical resize +10<CR>
+nnoremap <C-W><C-H> :vertical resize -10<CR>
+nnoremap <C-W><C-K> :resize -10<CR>
+nnoremap <C-W><C-J> :resize +10<CR>
+
+" 窗口操作
+nnoremap <C-W>q :q<CR>
 
 " 全局复制
 " systematic clipboard
@@ -232,248 +241,70 @@ map <Leader><Leader>k <Plug>(easymotion-k)
 nmap <Leader>r :source $MYVIMRC<CR>
 autocmd! bufwritepost vimrc source $MYVIMRC
 
+" 自定义buffer跳转,不跳到quickfix, 不跳转到现有window所打开的buffer
+" 玄学: 如果在nerdtree打开的窗口,会自动到最后的窗口切换buf
+function! ChangeBuf(direction)
+	if exists("b:NERDTree") || &filetype=="help" || &ft=="qf"
+		echo "can't change buffer"
+		return
+	endif
+	while 1
+		try
+			exec "b".a:direction
+		catch /^Vim\%((\a\+)\)\=:E/	" catch all Vim errors
+			exec "w"
+			exec "b".a:direction
+			" echom "auto save before go to next buffer"
+		endtry
+		if( &buftype != "quickfix" )
+			return
+		endif
+	endwhile
+endfunc
 
+nmap <Space>j :ALENext<CR>
+nmap <Space>k :ALEPrevious<CR>
 
-"-----------------------------------------------------------------------------------------------------
-"-----------------------------------------------------------------------------------------------------
-"-----------------------------------------------------------------------------------------------------
+function! Mv()
+	    let old_name = expand('%')
+	    let new_name = input('New file name: ', expand('%'), 'file')
+	    if new_name != '' && new_name != old_name
+   		     exec ':saveas ' . new_name
+       		 exec ':silent !rm ' . old_name
+	        redraw!
+		endif
+endfunction
 
+function! MvCurBuf(filename)
+	if a:filename != expand('%')
+   		     exec ':saveas ' . new_name
+       		 exec ':silent !rm ' . old_name
+   			 redraw!
+	endif
+endfunc
 
+command! -nargs=0 Mv call Mv()
+command! -nargs=1 MvCurBuf call Mv(<args>)
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"""""""""""""""""""""""""""""""""""""""""""    Plugin    """"""""""""""""""""""""""""""""""""""""""""""
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"########################
-"	<多光标操作>		#
-"########################
-Plugin 'terryma/vim-multiple-cursors'
-
-"########################
-"      <自动补全>       #
-"########################
-Plugin 'Valloric/YouCompleteMe'
-
-"########################
-"      <语法检测>       #
-"########################
-" Plugin 'vim-syntastic/syntastic'
-
-"########################
-"    <自动切换输入法>   #
-"########################
-" Plugin 'lilydjwg/fcitx.vim'
-
-
-"########################
-"       <文件操作>      #
-"########################
-Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
-
-
-
-"########################
-"     <函数操作>       #
-"########################
-Plugin 'vim-scripts/taglist.vim'
-
-
-"########################
-"        <md>           #
-"########################
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
-
-"##########################
-"<底部导航条和buffer显示> #
-"##########################
-Plugin 'vim-airline/vim-airline'
-
-"       <片段补全>      #
-"########################
-" Track the engine.
-Plugin 'SirVer/ultisnips'
-" Snippets are separated from the engine. Add this if you want them:
-Plugin 'honza/vim-snippets'
-
-"########################
-"      <快速注释>      #
-"########################
-Plugin 'scrooloose/nerdcommenter'
-
-"########################
-"      <括号补全>      #
-"########################
-Plugin 'jiangmiao/auto-pairs'
-
-"########################
-"       <自动格式>      #
-"########################
-Plugin 'Chiel92/vim-autoformat'
-
-"########################
-"       <两边括号>      #
-"########################
-Plugin 'tpope/vim-surround'
-
-"########################
-"       <快速跳转>      #
-"########################
-Plugin 'easymotion/vim-easymotion'
-
-"########################
-"       <c++高亮>       #
-"########################
-Plugin 'octol/vim-cpp-enhanced-highlight'
-
-
-"########################
-"    <上下括号对齐线>   #
-"########################
-Plugin 'nathanaelkane/vim-indent-guides'
-
-"########################
-"     <vim表格对齐>     #
-"########################
-Plugin 'dhruvasagar/vim-table-mode'
-
-"########################
-"  <vim异步执行shell>   #
-"########################
-Plugin 'skywind3000/vimmake'
-
-"########################
-"  <异步执行shell>   #
-"########################
-Plugin 'kien/ctrlp.vim'
-" ctrlp使用ag.vim提高查找速度,ag.vim使用外部 ag/"the_silver_searcher"
-Plugin 'rking/ag.vim'
-
-"########################
-"    <异步代码检查>     #
-"########################
-Plugin 'w0rp/ale'
-
-
-
-let vimrcs = $HOME."/.vimrcs"
-
-" auto load *.vim in the dir argument you give
-function! LoadVimFile(dir)
-	if finddir(a:dir) != ""
-		let vim_files = split(globpath(a:dir,"*.vim"),'\n')
-		for f in vim_files
-			exec "source " f
-		endfor
-
-		let dirs = split(globpath(a:dir,"*"),'\n')
-		for subdir in dirs
-			if finddir(subdir) != ""
-				exec "call LoadVimFile(subdir)"
-			endif
-		endfor
+function! AddCppHeaderFile()
+	let final_header_line = search('#include',"be")
+	if final_header_line == 0
+		call append(0,"#include ")
+		call cursor(1,9999)
+		exe "normal! a"
 	else
-		echo a:dir." is not exists"
-
+		call append(line('.'), "#include ")
+		call cursor(line('.')+1,9999)
 	endif
-endfunc
-exec "call LoadVimFile(vimrcs)"
-set textwidth=140
+endfunction
+nmap <leader>ah :call AddCppHeaderFile()<CR>
 
-" 对markdown格式的文件开启英文单词拼写检查
-" open English word spell check for markdown
-autocmd FileType markdown,mkd setlocal spell spelllang=en_us,cjk
-" 当修改.vimrc，自动加载
-autocmd! bufwritepost $HOME/.vimrc source %
+" 配合cppman, tmux查看c++文档
+command! -nargs=+ Cppman silent! call system("tmux split-window cppman -S" . expand(<q-args>))
+autocmd FileType cpp nnoremap <silent><buffer> K <Esc>:Cppman <cword><CR>
+autocmd FileType c nnoremap <silent><buffer> K <Esc>:Cppman <cword><CR>
 
-" 设置变量,供下文使用
-let $author_name = "Jefung"
-let $author_email = "865424525jefung@gmail.com"
-
-" question: fix nerdtree plugin bug: can't set user title when using nerdtree method to new file
-" solution: add BufEnter event to file, and adjust if it's empty or not, if empty, add title to it
-" 设置sh的文件头
-function!  SetTitleForSh()
-	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
-	if l:is_empty == 0
-		return
-	endif
-	if &filetype == 'sh'
-		call setline(1, "\############################################")
-		call append(line("."), "\# File Name: ".expand("%"))
-		call append(line(".")+1, "\# Program: ")
-		call append(line(".")+2, "\#	 ")
-		call append(line(".")+3, "\# Usage :")
-		call append(line(".")+4, "\#	 ")
-		call append(line(".")+5, "\# Author :".$author_name)
-		call append(line(".")+6, "\# email :".$author_email)
-		call append(line(".")+7, "\# create time :".strftime("%Y-%m-%d %H:%M"))
-		call append(line(".")+8, "\#======================================")
-		call append(line(".")+9, "\#!/bin/bash")
-		call append(line(".")+10, "")
-	endif
-	exec ":w"
-endfunc
-autocmd BufNew,BufEnter *.sh, exec ":call SetTitleForSh()"
-
-
-" 设置java的文件头
-function! PreBuildInJava()
-	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
-	if l:is_empty == 0
-		return
-	endif
-
-	call setline(1,"public class ".expand("%:r")."{")
-	call setline(line(".")+1,"")
-	call setline(line(".")+2,"  public static void main(String args[]){")
-	call setline(line(".")+3,"")
-	call setline(line(".")+4,"  }")
-	call setline(line(".")+5,"")
-	call setline(line(".")+6,"}")
-	exec ":w"
-endfunc
-autocmd BufNewFile,BufEnter *.java exec ":call PreBuildInJava()"
-
-" 设置python的文件头
-function! SetTitleForPy()
-	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
-	if l:is_empty == 0
-		return
-	endif
-	call setline(1,"#!/usr/bin/env python")
-	call setline(line(".")+1,"# -*- coding: utf-8 -*- ")
-	call setline(line(".")+2,"")
-	exec ":w"
-endfunc
-autocmd BufNewFile,BufEnter *.py exec ":call SetTitleForPy()"
-
-" 设置main.cpp 的文件头
-function! SetTitleForMainCpp()
-	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
-	if l:is_empty == 0
-		return
-	endif
-	call setline(1,"/*")
-	call setline(line(".")+1,"* auth        : Jefung")
-	call setline(line(".")+2,"* version     : v1.0")
-	call setline(line(".")+3,"* description : ")
-	call setline(line(".")+4,"*     ")
-	call setline(line(".")+5,"* analyse     : ")
-	call setline(line(".")+6,"*     ")
-	call setline(line(".")+7,"*/")
-	call setline(line(".")+8,"")
-	call setline(line(".")+9,"#include <iostream>")
-	call setline(line(".")+10,"using namespace std;")
-	call setline(line(".")+11,"")
-	call setline(line(".")+12,"int main(int argc, char *argv[] ){")
-	call setline(line(".")+13,"     ")
-	call setline(line(".")+14,"}")
-	exec ":w"
-endfunc
-autocmd BufNewFile,BufEnter main.cpp exec ":call SetTitleForMainCpp()"
-
+" 自动补全hpp文件头
 " 设置.h头文件的文件头
 function! SetTitleForHpp()
 	let is_empty=system("test -s ". expand("%")." && echo 0 || echo 1")
@@ -485,136 +316,6 @@ function! SetTitleForHpp()
 	call setline(line(".")+2,"")
 	call setline(line(".")+3,"")
 	call setline(line(".")+4,"#endif")
-	exec ":w"
+	" exec ":w"
 endfunc
 autocmd BufNewFile,BufEnter *.hpp,*.h exec ":call SetTitleForHpp()"
-
-" 增加自定义修改文件名: rename newfilename
-:command! -nargs=1 Rename let tpname = expand('%:t') | saveas <args> | edit <args> | call delete(expand(tpname))
-
-" 自定义buffer跳转,不跳到quickfix, 不跳转到现有window所打开的buffer
-" 玄学: 如果在nerdtree打开的窗口,会自动到最后的窗口切换buf
-function! ChangeBuf(direction)
-	if exists("b:NERDTree") || &filetype=="help" || &ft=="qf"
-		echo "can't change buffer"
-		return
-	endif
-	" let cur_buf_num=bufnr('%')
-	" let buf_num = 0
-	" let all_win_buf_num = []
-	" let win_num = winnr()
-	" let cur_win_num = 0
-
-	" exec "windo call add(all_win_buf_num, winbufnr(winnr()))"
-	" exec "wincmd p"
-	" while cur_buf_num != buf_num
-	while 1
-		try
-			exec "b".a:direction
-		catch /^Vim\%((\a\+)\)\=:E/	" catch all Vim errors
-			exec "w"
-			exec "b".a:direction
-			" echom "auto save before go to next buffer"
-		endtry
-		" let buf_num = bufnr('%')
-		" if index(all_win_buf_num,buf_num) != -1
-		"     continue
-		" endif
-		if( &buftype != "quickfix" )
-			return
-		endif
-	endwhile
-endfunc
-
-" when you enter a project dir or subdir, the function
-" will find the project root dir throung find some file
-" that only exists in project root
-function! SetCppProject()
-	if has("cscope")
-		"add any database in current dir
-		if filereadable("cscope.out")
-			let g:cur_cpp_project_dir=getcwd()
-			silent! cs kill -1
-			silent! exec "cs add cscope.out " g:cur_cpp_project_dir
-		else
-			let cscope_file=findfile("cscope.out", ".;")
-
-			" can't find project root, exit
-			if empty(cscope_file)
-				return
-			endif
-
-			let g:cur_cpp_project_dir=matchstr(cscope_file, ".*/")
-			if !empty(cscope_file) && filereadable(cscope_file)
-				silent! cs kill -1
-				silent! exec "cs add" cscope_file g:cur_cpp_project_dir
-			endif
-		endif
-		exec "call CurCppProjectSetting()"
-	endif
-endfunction
-auto vimenter * exec ":call SetCppProject()"
-auto BufWritePost *.cpp,*.hpp,*.h,*.c, exec ":call UpdateScsopeOut()"
-
-function! CurCppProjectSetting()
-	if !exists("g:cur_cpp_project_dir")
-		return
-	endif
-
-	" set ctrp map to search current cpp project
-	nnoremap <C-P> :execute("CtrlP ".g:cur_cpp_project_dir) <CR>
-endfunc
-
-function! UpdateScsopeOut()
-	if !exists('g:cur_cpp_project_dir') || empty(expand('%')) || match(getcwd(),g:cur_cpp_project_dir) == -1
-		return
-	endif
-	exec "silent! VimTool update_cscope ".g:cur_cpp_project_dir
-	exec "silent! cs reset"
-endfunc
-Plugin 'lambdalisue/vim-manpager'
-
-function! AddInclude()
-	let match = search("#include ","nb")
-	if(match==0)
-		let match = search("#include ","n")
-	endif
-	if(match==0)
-		echo "can't match '#include'"
-		return
-	endif
-    let filename = input("input header file name: ","")
-	if(filename == "")
-		echo "filename is empty, do nothing"
-		return
-	endif
-	" echo filename
-	if matchstr(filename,'".*"') == ""
-		call append(line(match)+1, '#include <'.filename.'>')
-	else
-		call append(line(match)+1, '#include '.filename)
-	endif
-	" echo match
-endfunc
-function! AddIncludeFilename(filename)
-	" echo a:filename
-	let match = search("#include ","nb")
-	if(match==0)
-		let match = search("#include ","n")
-	endif
-	if(match==0)
-		echo "can't match '#include'"
-		return
-	endif
-	if(a:filename == "")
-		echo match+1
-		call append(match, '#include ""')
-		exec match+1
-		exec "normal $"
-		return
-	endif
-	call append(line(match)+1, '#include <'.a:filename.'>')
-endfunc
-" command!  -nargs=0 AddInclude call AddInclude()
-command!  -nargs=1 AH call AddIncludeFilename(<args>)
-" command!  -nargs=0 AH call AddIncludeFilename("")
