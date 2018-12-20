@@ -1,5 +1,6 @@
 nnoremap <Leader>en :ALENext<CR>
 nnoremap <Leader>ep :ALEPrevious<CR>
+
 nnoremap <Leader>n :ALENext<CR>
 nnoremap <Leader><Space> :ALEPrevious<CR>
 nnoremap <Leader>j :ALENext<CR>
