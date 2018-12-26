@@ -32,6 +32,7 @@ Plug 'szw/vim-maximizer'
 Plug 'skywind3000/vim-preview'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)']  }
 Plug 'Jefung/h2cppx'
+Plug 'lambdalisue/vim-manpager'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
