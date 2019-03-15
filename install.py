@@ -38,7 +38,6 @@ if __name__ == "__main__":
     print(home)
     # d["src"] = "des"
     d[".clang-format"] = home
-    d[".vimrc"] = home
     d['.vimrcs'] = home
     d['.vim'] = home
     # d['.ycm_extra_conf.py'] = os.path.join(home,"/repos/vimrc/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm")

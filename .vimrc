@@ -33,6 +33,7 @@ Plug 'skywind3000/vim-preview'
 Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)']  }
 Plug 'Jefung/h2cppx'
 Plug 'lambdalisue/vim-manpager'
+Plug 'solarnz/thrift.vim'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -320,3 +321,6 @@ function! SetTitleForHpp()
 	" exec ":w"
 endfunc
 autocmd BufNewFile,BufEnter *.hpp,*.h exec ":call SetTitleForHpp()"
+
+" add filetype detect
+autocmd BufRead,BufNewFile *.thrift set filetype=thrift
