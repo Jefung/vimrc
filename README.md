@@ -29,7 +29,6 @@ vim安装
 *  使用系统软件包管理安装vim:
 	* ps: centos安装vim-X11(基于GUI的vim,　其他类似)可以带上 `+clipboard` 特性,便于以后使用全局复制粘贴
 	
-
 ## 目录介绍
 * .vim: 
 	* color: vim主题样式存放目录
