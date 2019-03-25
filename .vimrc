@@ -211,7 +211,7 @@ map L $
 map <C-j> <C-W>j
 map <C-h> <C-W>h
 map <C-k> <C-W>k
-map <C-l> <C-W>l
+
 
 " 窗口缩放
 nnoremap <C-W><C-L> :vertical resize +10<CR>
