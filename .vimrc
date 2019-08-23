@@ -4,36 +4,40 @@ let mapleader = ";"
 call plug#begin('~/.vim/plugged')
 
 " Declare the list of plugins.
-Plug 'tpope/vim-sensible'
-Plug 'junegunn/seoul256.vim'
+" Plug 'tpope/vim-sensible'
+" Plug 'junegunn/seoul256.vim'
 " Plug 'Valloric/YouCompleteMe'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'skywind3000/gutentags_plus'
 Plug 'Yggdroot/LeaderF'
-Plug 'skywind3000/asyncrun.vim'
-Plug 'w0rp/ale'
+" Plug 'skywind3000/asyncrun.vim'
+" Plug 'w0rp/ale'
 Plug 'vim-airline/vim-airline'
 " Plug 'kana/vim-textobj-user'
 " Plug 'kana/vim-textobj-indent'
 " Plug 'kana/vim-textobj-syntax'
 " Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
 " Plug 'sgur/vim-textobj-parameter'
-Plug 'octol/vim-cpp-enhanced-highlight'
+" Plug 'octol/vim-cpp-enhanced-highlight'
+" Plug 'flazz/vim-colorschemes'
 Plug 'sbdchd/neoformat'
 Plug 'scrooloose/nerdtree',{ 'on':  'NERDTreeToggle'  }
 " Plug 'Shougo/echodoc.vim'
 " Plug 'terryma/vim-multiple-cursors'
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+" Plug 'SirVer/ultisnips'
+" Plug 'honza/vim-snippets'
 Plug 'scrooloose/nerdcommenter'
 " Plug 'tenfyzhong/CompleteParameter.vim'
-Plug 'jiangmiao/auto-pairs'
-Plug 'szw/vim-maximizer'
+" Plug 'jiangmiao/auto-pairs'
+" Plug 'szw/vim-maximizer'
 Plug 'skywind3000/vim-preview'
-Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)']  }
-Plug 'Jefung/h2cppx'
-Plug 'lambdalisue/vim-manpager'
-Plug 'solarnz/thrift.vim'
+" Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)']  }
+" Plug 'Jefung/h2cppx'
+" Plug 'lambdalisue/vim-manpager'
+
+" go env plugin
+" Plug 'solarnz/thrift.vim'
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -322,5 +326,3 @@ function! SetTitleForHpp()
 endfunc
 autocmd BufNewFile,BufEnter *.hpp,*.h exec ":call SetTitleForHpp()"
 
-" add filetype detect
-autocmd BufRead,BufNewFile *.thrift set filetype=thrift
